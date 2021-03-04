@@ -9,10 +9,10 @@ class Index():
         return render.index()
 
     def POST(self):
-        # try:
-        #     form = web.input(photo={})
+        try:
+            form = web.input()
 
-        #     print(form)
+            print(form)
         #     filedir = '../../static/jpg/' # change this to the directory you want to store the file in.
         #     if 'photo' in form: # to check if the file-object is created
         #         filepath=form.photo.filename.replace('\\','/') # replaces the windows-style slashes with linux ones.
@@ -21,7 +21,6 @@ class Index():
         #         fout.write(form.photo.file.read()) # writes the uploaded file to the newly created file.
         #         fout.close() # closes the file, upload complete.
         #     return "cool"
-        # except Exception as error:
-        #     print("Error 100: {}".format(error.args[0]))
-        #     return "MMM algo salio mal"
-        print("mmm")
+        except Exception as error:
+            print("Error 100: {}".format(error.args[0]))
+            return "MMM algo salio mal"

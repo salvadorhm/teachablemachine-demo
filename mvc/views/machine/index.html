@@ -1,9 +1,13 @@
 <h1>Hello</h1>
-<!-- <form method="POST"  enctype="multipart/form-data"> -->
+<form method="POST"  enctype="multipart/form-data">
 
-<video id="player" name="uno" controls autoplay></video>
-<button id="capture" name="dos">Capture</button>
-<canvas id="canvas" name="photo" width=320 height=240></canvas>
+    <video id="player" name="uno" controls autoplay></video>
+    <button id="capture" name="dos">Capture</button>
+    <input type="image" id="image" name="photo">
+    <canvas id="canvas" name="tres" width=320 height=240 "></canvas>
+    
+
+</form>
 
 <script>
   const player = document.getElementById('player');
@@ -17,7 +21,23 @@
 
   captureButton.addEventListener('click', () => {
     // Draw the video frame to the canvas.
+    alert("hola");
     context.drawImage(player, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(function(blob) {
+  var newImg = document.createElement("img"),
+      url = URL.createObjectURL(blob);
+
+  newImg.onload = function() {
+    // no longer need to read the blob so it's revoked
+    URL.revokeObjectURL(url);
+  };
+
+  newImg.src = url;
+  newImg.name = "photo"
+  document.body.appendChild(newImg);
+});
+    alert("hola");
+
     // player.srcObject.getVideoTracks().forEach(track => track.stop());
   });
 
@@ -27,5 +47,3 @@
       player.srcObject = stream;
     });
 </script>
-
-<!-- </form> -->

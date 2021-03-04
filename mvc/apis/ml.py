@@ -41,12 +41,19 @@ class Ml():
 
             # run the inference
             prediction = model.predict(data)
-
+            analisis = []
             for i in prediction:
-                if i[0] > 0.8:
-                    return "mouse"
-                elif i[1] > 0.8:
-                    return "keyboard"
+                data = {}
+                data["valor"] = i[0]
+                data["clase"]="mouse"
+                analisis.append(data)
+                data = {}
+                data["valor"] = i[1]
+                data["clase"]="keyboard"
+                analisis.append(data)
+
+
+            return analisis
         except Exception as error:
             return "Error"
 

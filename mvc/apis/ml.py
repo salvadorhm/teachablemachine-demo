@@ -9,12 +9,12 @@ import base64
 class Ml():
 
     def machineLerning(self,file):
-        try:
+        # try:
             # Disable scientific notation for clarity
             np.set_printoptions(suppress=True)
 
             # Load the model
-            model = tensorflow.keras.models.load_model('keras_model.h5')
+            model = tensorflow.keras.models.load_model('static/jpg/keras_model.h5')
 
             # Create the array of the right shape to feed into the keras model
             # The 'length' or number of images you can put into the array is
@@ -22,6 +22,7 @@ class Ml():
             data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
             # Replace this with the path to your image
+            print("file to analyse {}".format(file))
             image = Image.open(file)
 
             #resize the image to a 224x224 with the same strategy as in TM2:
@@ -56,42 +57,33 @@ class Ml():
 
 
             return analisis
-        except Exception as error:
-            print("Error 100: {}".format(error.args[0]))
-            return result
+        # except Exception as error:
+        #     result ={}
+        #     result["status"] = "400"
+        #     result["error"] = error.args[0]
+        #     print("Error 100: {}".format(error.args[0]))
+        #     return result
 
     def POST(self):
-        try:
-            # form = web.input()
+        # try:
             form = web.input(photo={})
             result ={}
-            # print(form["photo"])
             filedir = 'static/jpg' # change this to the directory you want to store the file in.
-
-            if 'photo' in form:
-                # with open("imageToSave.png", "wb") as fh:
-                #     fh.write(form["photo"])
-                print("si photo")
-            else:
-                print("no photo")
-                # fh.write(base64.decodebytes(form["photo"])
-
-            # if 'photo' in form: # to check if the file-object is created
-            #     filepath = form.photo.filename.replace('\\','/') # replaces the windows-style slashes with linux ones.
-            #     filename = filepath.split('/')[-1] # splits the and chooses the last part (the filename with extension)
-            #     # fout = open( filename,'wb') # creates the file where the uploaded file should be stored
-            #     fout = open(filedir +'/'+ filename,'wb') # creates the file where the uploaded file should be stored
-            #     fout.write(form.photo.file.read()) # writes the uploaded file to the newly created file.
-            #     fout.close() # closes the file, upload complete.
-            #     result["status"] = 200
-            # filename = filepath.split('/')[-1]
-            # analisis = self.machineLerning(filedir +'/'+ filename)
-            # result["analisis"] = analisis
-            # return result
-            print("hola")
-        except Exception as error:
-            result ={}
-            result["status"] = "400"
-            result["error"] = error.args[0]
-            print("Error 101: {}".format(error.args[0]))
+            if 'photo' in form: # to check if the file-object is created
+                filepath = form.photo.filename.replace('\\','/') # replaces the windows-style slashes with linux ones.
+                filename = filepath.split('/')[-1] # splits the and chooses the last part (the filename with extension)
+                # fout = open( filename,'wb') # creates the file where the uploaded file should be stored
+                fout = open(filedir +'/'+ filename,'wb') # creates the file where the uploaded file should be stored
+                fout.write(form.photo.file.read()) # writes the uploaded file to the newly created file.
+                fout.close() # closes the file, upload complete.
+                result["status"] = 200
+            filename = filepath.split('/')[-1]
+            analisis = self.machineLerning(filedir +'/'+ filename)
+            result["analisis"] = analisis
             return result
+        # except Exception as error:
+        #     result ={}
+        #     result["status"] = "400"
+        #     result["error"] = error.args[0]
+        #     print("Error 101: {}".format(error.args[0]))
+        #     return result

@@ -1,8 +1,10 @@
 import web
 
 urls = (
-    '/', 'mvc.controllers.machine.index.Index',
-    '/ml', 'mvc.apis.ml.Ml',
+    '/upload', 'mvc.controllers.machine.index.Index',
+    '/', 'mvc.controllers.machine.upload.Upload',
+    '/ml', 'mvc.controllers.machine.ml.Ml',
+    '/api', 'mvc.apis.ml.Ml',
 )
 app = web.application(urls, globals())
 

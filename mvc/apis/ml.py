@@ -4,12 +4,13 @@ import tensorflow.keras
 from PIL import Image, ImageOps
 import numpy as np
 import base64
+import json
 
 
 class Ml():
 
     def machineLerning(self,file):
-        # try:
+        try:
             # Disable scientific notation for clarity
             np.set_printoptions(suppress=True)
 
@@ -23,7 +24,7 @@ class Ml():
 
             # Replace this with the path to your image
             print("file to analyse {}".format(file))
-            image = Image.open(file)
+            image = Image.open(file).convert('RGB')
 
             #resize the image to a 224x224 with the same strategy as in TM2:
             #resizing the image to be at least 224x224 and then cropping from the center
@@ -47,25 +48,25 @@ class Ml():
             analisis = []
             for i in prediction:
                 data = {}
-                data["valor"] = i[0]
+                data["valor"] = str(i[0])
                 data["clase"]="mouse"
                 analisis.append(data)
                 data = {}
-                data["valor"] = i[1]
+                data["valor"] = str(i[1])
                 data["clase"]="keyboard"
                 analisis.append(data)
 
 
             return analisis
-        # except Exception as error:
-        #     result ={}
-        #     result["status"] = "400"
-        #     result["error"] = error.args[0]
-        #     print("Error 100: {}".format(error.args[0]))
-        #     return result
+        except Exception as error:
+            result ={}
+            result["status"] = "400"
+            result["error"] = error.args[0]
+            print("Error 100: {}".format(error.args[0]))
+            return result
 
     def POST(self):
-        # try:
+        try:
             form = web.input(photo={})
             result ={}
             filedir = 'static/jpg' # change this to the directory you want to store the file in.
@@ -80,10 +81,13 @@ class Ml():
             filename = filepath.split('/')[-1]
             analisis = self.machineLerning(filedir +'/'+ filename)
             result["analisis"] = analisis
+            print(result)
+            web.webapi.header('Content-Type', 'application/json', unique=True)
+            web.webapi.OK(data='OK', headers={})
+            return json.dumps(result)
+        except Exception as error:
+            result ={}
+            result["status"] = "400"
+            result["error"] = error.args[0]
+            print("Error 101: {}".format(error.args[0]))
             return result
-        # except Exception as error:
-        #     result ={}
-        #     result["status"] = "400"
-        #     result["error"] = error.args[0]
-        #     print("Error 101: {}".format(error.args[0]))
-        #     return result

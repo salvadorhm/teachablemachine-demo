@@ -1,76 +1,51 @@
 <h1>Hello</h1>
-<!-- <form method="POST" enctype="multipart/form-data"> -->
 <img src="" name="photo1" id="photo1">
 <canvas id="canvas" name="photo" width=400 height=400></canvas>
-      <input type=" button" value="Submit" onclick="submit()"> 
+<input type="button" value="Analizar" onclick="submit()">
 
-    <!-- </form> -->
-
-
-    <video id="player" name="uno" controls autoplay></video>
-    <button id="capture" name="dos">Capture</button>
+<video id="player" name="uno" width=400 height=400 controls autoplay></video>
+<button id="capture" name="dos">Capturar</button>
 
 
 
-    <script>
-        const player = document.getElementById('player');
-        const canvas = document.getElementById('canvas');
-        const photo1 = document.getElementById('photo1');
-        // const photo = document.getElementById('photo');
-        const context = canvas.getContext('2d');
-        const captureButton = document.getElementById('capture');
+<script>
+    const player = document.getElementById('player');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const captureButton = document.getElementById('capture');
 
-        const constraints = {
-            video: true,
-        };
+    const constraints = {
+        video: true,
+    };
 
-        captureButton.addEventListener('click', () => {
-            // Draw the video frame to the canvas.
-            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+    captureButton.addEventListener('click', () => {
+        // Draw the video frame to the canvas.
+        context.drawImage(player, 0, 0, canvas.width, canvas.height);
 
-            canvas.toBlob(function (blob) {
-                url = URL.createObjectURL(blob);
-                photo1.onload = function () {
-                    // no longer need to read the blob so it's revoked
-                    URL.revokeObjectURL(url);
-                };
+        canvas.toBlob(function (blob) {
+            url = URL.createObjectURL(blob);
+        });
+    });
 
-                photo1.src = url;
-            });
+    async function submit() {
+        alert("Imagen enviada para analizar");
+        let imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        let formData = new FormData();
+        formData.append("photo", imageBlob, "imagen.jpg");
+        console.log(imageBlob);
 
-                        // player.srcObject.getVideoTracks().forEach(track => track.stop());
+        let response = await fetch('/api', {
+            method: 'POST',
+            body: formData
+        });
+        let result = await response.json();
+        alert(result.class);
+    };
+
+    // Attach the video stream to the video element and autoplay.
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+            player.srcObject = stream;
         });
 
-        async function submit() {
-                alert("hol");
-                let imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-
-                // let photo = document.getElementById("photo1").src; 
-                let photo = document.getElementById("photo1").files;
-                let formData = new FormData();
-                formData.append("photo", imageBlob, "imagen.jpg");
-                console.log(imageBlob);
-
-                // fetch("/api", {
-                //     body: formData,
-                //     headers: {
-                //         // "Content-Type": "application/x-www-form-urlencoded",
-                //         "Content-Type": "multipart/form-data",
-                //     },
-                //     method: "POST",
-                // });
-                let response = await fetch('/api', {
-                    method: 'POST',
-                    body: formData
-                });
-                let result = await response.json();
-                alert(result.status);
-            };
-
-        // Attach the video stream to the video element and autoplay.
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then((stream) => {
-                player.srcObject = stream;
-            });
-
-    </script>
+</script>

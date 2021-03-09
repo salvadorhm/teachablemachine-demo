@@ -45,18 +45,22 @@ class Ml():
 
             # run the inference
             prediction = model.predict(data)
-            analisis = []
+            print("Prediction {}".format(prediction))
+            analisis = None
             for i in prediction:
-                data = {}
-                data["valor"] = str(i[0])
-                data["clase"]="mouse"
-                analisis.append(data)
-                data = {}
-                data["valor"] = str(i[1])
-                data["clase"]="keyboard"
-                analisis.append(data)
-
-
+                # data["valor"] = str(i[0])
+                # data["clase"]="mouse"
+                # analisis.append(data)
+                # data = {}
+                # data["valor"] = str(i[1])
+                # data["clase"]="keyboard"
+                # analisis.append(data)
+                if i[0] > 0.93:
+                    analisis = "mouse"
+                elif i[1] > 0.93:
+                    analisis = "keyboard"
+                else:
+                    analisis = "not recogniced"
             return analisis
         except Exception as error:
             result ={}
@@ -80,7 +84,7 @@ class Ml():
                 result["status"] = 200
             filename = filepath.split('/')[-1]
             analisis = self.machineLerning(filedir +'/'+ filename)
-            result["analisis"] = analisis
+            result["clase"] = analisis
             print(result)
             web.webapi.header('Content-Type', 'application/json', unique=True)
             web.webapi.OK(data='OK', headers={})

@@ -24,7 +24,7 @@ class Ml():
 
             # Replace this with the path to your image
             print("file to analyse {}".format(file))
-            image = Image.open(file).convert('RGB')
+            image = Image.open(file).convert('RGB') # corrige error
 
             #resize the image to a 224x224 with the same strategy as in TM2:
             #resizing the image to be at least 224x224 and then cropping from the center
